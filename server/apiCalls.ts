@@ -1,4 +1,4 @@
-import { Link } from "./searchContext"
+import { Link } from './searchContext'
 
 export function validateLinks(links: Link[]) {
   const url = 'http://3.21.75.122:8000'

@@ -1,4 +1,5 @@
 import { docs_v1 } from "@googleapis/docs"
+import { mockedLinks } from "./mockData"
 
 type PassageContext = {
   linked_str: string
@@ -11,7 +12,11 @@ export type Link = {
   passage_context: PassageContext
 }
 
-function findHyperLinks() {
+export function mockFindHyperLinks() {
+  return mockedLinks
+}
+
+export function findHyperLinks() {
 
   try {
     const document = DocumentApp.getActiveDocument()
@@ -24,6 +29,7 @@ function findHyperLinks() {
     const links = findLinksInParagraphs(paragraphs) as Link[]
     console.log(links)
 
+    return links
     // make validate api call with 5 links every time 
     // let index = 0;
     // while (index < links.length) {

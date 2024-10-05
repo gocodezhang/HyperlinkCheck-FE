@@ -3,5 +3,5 @@
 
 # except the extensions…
 !appsscript.json
-!main.ts
+!server/**/*
 !client/dist/**/*
