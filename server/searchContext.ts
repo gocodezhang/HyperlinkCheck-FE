@@ -1,5 +1,4 @@
 import { docs_v1 } from "@googleapis/docs"
-import { mockedLinks } from "./mockData"
 
 type PassageContext = {
   linked_str: string
@@ -10,10 +9,6 @@ type PassageContext = {
 export type Link = {
   hyperlink: string,
   passage_context: PassageContext
-}
-
-export function mockFindHyperLinks() {
-  return mockedLinks
 }
 
 export function findHyperLinks() {
