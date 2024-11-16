@@ -34,9 +34,9 @@ const HyperlinkCard: FC<HyperlinkCardProps> = ({ link }) => {
         <button
           type="button"
           onClick={handleValidate}
-          disabled={link.validation_code ? true : false}
+          disabled={link.validation_code === undefined ? false : true}
         >
-          {link.validation_code ? "Validated" : "Validate"}
+          {link.validation_code === undefined ? "Validate" : "Validated"}
         </button>
         <a href={link.hyperlink}>{link.hyperlink}</a>
       </div>

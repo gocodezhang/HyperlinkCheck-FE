@@ -30,11 +30,24 @@ function SideBar() {
   }, []);
 
   async function handleValidateAllLinks() {
-    const result = await serverFunctions.validateLinks(links);
+    // find indices of links need validation
+    const validateIndices: number[] = [];
+    links.forEach((link, i) => {
+      if (link.validation_code === undefined) {
+        validateIndices.push(i);
+      }
+    });
+    // validate links that have not been validated
+    const result = await serverFunctions.validateLinks(
+      validateIndices.map((index) => links[index])
+    );
+
+    // update links that just got validated
     const updatedLinks = [...links];
-    for (let i = 0; i < links.length; i++) {
-      updatedLinks[i].validation_code = result[i].validation_code;
-      updatedLinks[i].scores = result[i].scores;
+    for (let i = 0; i < validateIndices.length; i++) {
+      const indexInList = validateIndices[i];
+      updatedLinks[indexInList].validation_code = result[i].validation_code;
+      updatedLinks[indexInList].scores = result[i].scores;
     }
     setLinks(updatedLinks);
     setTotalNumberValidatedLinks();
