@@ -6,7 +6,7 @@ type PassageContext = {
   three_sentences?: string
 }
 
-export type Link = {
+export interface Link {
   hyperlink: string,
   passage_context: PassageContext
 }

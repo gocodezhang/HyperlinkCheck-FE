@@ -1,32 +1,62 @@
-import { useEffect, useState } from "react";
-import { Link } from "../../../server/searchContext";
+import { useEffect } from "react";
 import HyperlinkCard from "./HyperlinkCard";
 import Loader from "./Loader";
 import { serverFunctions } from "../utils/serverFunctions";
+import { useStore } from "../zustand";
 
-/* ---------------- Comment before push -------------- */
+/* ---------------- Dev only (Comment before push) -------------- */
 // import { mockedLinks } from "../utils/mockData";
 
 function SideBar() {
-  const [links, Setlinks] = useState<Link[]>([]);
+  const links = useStore((state) => state.links);
+  const totalNumberValidatedLinks = useStore(
+    (state) => state.totalNumberValidatedLinks
+  );
+  const setLinks = useStore((state) => state.setLinks);
+  const setTotalNumberValidatedLinks = useStore(
+    (state) => state.setTotalNumberValidatedLinks
+  );
 
   useEffect(() => {
     async function getLinks() {
-      Setlinks((await serverFunctions.findHyperLinks()) || []);
+      /* ---------------- For Prod (unComment before push) -------------- */
+      setLinks((await serverFunctions.findHyperLinks()) || []);
 
-      /* ---------------- Comment before push -------------- */
-      // Setlinks(mockedLinks);
+      // /* ---------------- Dev only (Comment before push) -------------- */
+      // setLinks(mockedLinks);
+      setTotalNumberValidatedLinks();
     }
     getLinks();
   }, []);
 
-  return links.length === 0 ? (
-    <Loader />
-  ) : (
+  async function handleValidateAllLinks() {
+    const result = await serverFunctions.validateLinks(links);
+    const updatedLinks = [...links];
+    for (let i = 0; i < links.length; i++) {
+      updatedLinks[i].validation_code = result[i].validation_code;
+      updatedLinks[i].scores = result[i].scores;
+    }
+    setLinks(updatedLinks);
+    setTotalNumberValidatedLinks();
+  }
+
+  if (links.length === 0) {
+    return <Loader />;
+  }
+
+  return (
     <div>
-      {links.map((link, i) => (
-        <HyperlinkCard key={i} link={link} />
-      ))}
+      <div>
+        <button type="button" onClick={handleValidateAllLinks}>
+          Validate All
+        </button>
+        <p>{`${totalNumberValidatedLinks}/${links.length}`}</p>
+      </div>
+      <div className="flex flex-col gap-4 p-4">
+        {links.map((link, i) => (
+          <HyperlinkCard key={i} link={link} />
+        ))}
+      </div>
     </div>
   );
 }

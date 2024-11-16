@@ -1,7 +1,13 @@
 import { Link } from './searchContext'
 
-export function validateLinks(links: Link[]) {
-  const url = 'http://3.21.75.122:8000'
+interface ValidationResult {
+  keywords: string[]
+  scores: number[]
+  validation_code: number
+}
+
+export function validateLinks(links: Link[]): ValidationResult[] {
+  const url = 'http://18.188.232.56:8000'
   const route = 'verify'
 
   const options = {
@@ -11,5 +17,7 @@ export function validateLinks(links: Link[]) {
   } as GoogleAppsScript.URL_Fetch.URLFetchRequestOptions
 
   const response = UrlFetchApp.fetch(`${url}/${route}`, options)
-  return response.getContentText()
+
+  // get text and parse into array
+  return JSON.parse(response.getContentText())
 }
