@@ -1,21 +1,32 @@
-import { useEffect } from "react";
-import HyperlinkCard from "./HyperlinkCard";
-import Loader from "./Loader";
+import { useEffect, useState } from "react";
 import { serverFunctions } from "../utils/serverFunctions";
 import { useStore } from "../zustand";
+
+import TopBar from "./TopBar/TopBar";
+import HyperlinkCard from "./HyperlinkCard/HyperlinkCard";
+import LandingLoader from "./LanndingLoader";
 
 /* ---------------- Dev only (Comment before push) -------------- */
 // import { mockedLinks } from "../utils/mockData";
 
 function SideBar() {
   const links = useStore((state) => state.links);
+  const totalNumberBrokenLinks = useStore(
+    (state) => state.totalNumberBrokenLinks
+  );
   const totalNumberValidatedLinks = useStore(
     (state) => state.totalNumberValidatedLinks
   );
+
   const setLinks = useStore((state) => state.setLinks);
   const setTotalNumberValidatedLinks = useStore(
     (state) => state.setTotalNumberValidatedLinks
   );
+  const setTotalNumberBrokenLinks = useStore(
+    (state) => state.setTotalNumberBrokenLinks
+  );
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     async function getLinks() {
@@ -25,6 +36,7 @@ function SideBar() {
       // /* ---------------- Dev only (Comment before push) -------------- */
       // setLinks(mockedLinks);
       setTotalNumberValidatedLinks();
+      setTotalNumberBrokenLinks();
     }
     getLinks();
   }, []);
@@ -38,6 +50,7 @@ function SideBar() {
       }
     });
     // validate links that have not been validated
+    setLoading(true);
     const result = await serverFunctions.validateLinks(
       validateIndices.map((index) => links[index])
     );
@@ -51,25 +64,30 @@ function SideBar() {
     }
     setLinks(updatedLinks);
     setTotalNumberValidatedLinks();
-  }
-
-  if (links.length === 0) {
-    return <Loader />;
+    setTotalNumberBrokenLinks();
+    setLoading(false);
   }
 
   return (
-    <div>
-      <div>
-        <button type="button" onClick={handleValidateAllLinks}>
-          Validate All
-        </button>
-        <p>{`${totalNumberValidatedLinks}/${links.length}`}</p>
-      </div>
-      <div className="flex flex-col gap-4 p-4">
-        {links.map((link, i) => (
-          <HyperlinkCard key={i} link={link} />
-        ))}
-      </div>
+    <div className="container py-2 h-full flex flex-col justify-center items-center">
+      {links.length === 0 ? (
+        <LandingLoader />
+      ) : (
+        <>
+          <TopBar
+            totalNumberLinks={links.length}
+            totalNumberBrokenLinks={totalNumberBrokenLinks}
+            totalNumberValidatedLinks={totalNumberValidatedLinks}
+            handleValidateAllLinks={handleValidateAllLinks}
+            loading={loading}
+          />
+          <div className="flex flex-col gap-4 px-4 w-full max-h-[85vh] overflow-y-auto overflow-x-hidden">
+            {links.map((link, i) => (
+              <HyperlinkCard key={i} link={link} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

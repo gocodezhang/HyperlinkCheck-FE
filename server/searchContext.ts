@@ -1,6 +1,6 @@
 import { docs_v1 } from "@googleapis/docs"
 
-type PassageContext = {
+export interface PassageContext {
   linked_str: string
   sentence: string
   three_sentences?: string
