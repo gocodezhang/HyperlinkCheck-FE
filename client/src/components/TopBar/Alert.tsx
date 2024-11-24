@@ -9,7 +9,7 @@ type AlertProps = {
 const Alert: FC<AlertProps> = ({ message }) => {
   return (
     <div
-      className="flex items-center p-2 gap-1 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+      className="flex items-center p-2 gap-1 max-h-[48px] max-w-[172px] text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
       role="alert"
     >
       <FontAwesomeIcon icon={faCircleExclamation} />

@@ -7,7 +7,7 @@ import HyperlinkCard from "./HyperlinkCard/HyperlinkCard";
 import LandingLoader from "./LanndingLoader";
 
 /* ---------------- Dev only (Comment before push) -------------- */
-// import { mockedLinks } from "../utils/mockData";
+import { mockedLinks } from "../utils/mockData";
 
 function SideBar() {
   const links = useStore((state) => state.links);
@@ -31,10 +31,10 @@ function SideBar() {
   useEffect(() => {
     async function getLinks() {
       /* ---------------- For Prod (unComment before push) -------------- */
-      setLinks((await serverFunctions.findHyperLinks()) || []);
+      // setLinks((await serverFunctions.findHyperLinks()) || []);
 
       // /* ---------------- Dev only (Comment before push) -------------- */
-      // setLinks(mockedLinks);
+      setLinks(mockedLinks);
       setTotalNumberValidatedLinks();
       setTotalNumberBrokenLinks();
     }

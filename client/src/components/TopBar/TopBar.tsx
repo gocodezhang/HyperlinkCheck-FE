@@ -41,7 +41,7 @@ const TopBar: FC<TopBarProps> = ({
   const alertMessage = buildMessage();
 
   return (
-    <div className="w-full flex flex-row justify-between px-4 mb-2">
+    <div className="w-full flex flex-row justify-between px-4 mb-2 h-[5vh]">
       <Alert message={alertMessage} />
       <button
         type="button"
